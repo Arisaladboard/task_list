@@ -1,11 +1,12 @@
 var express = require('express')
 var app = express();
-var bodyParser = require("body-parser")
+var bodyParser = require("body-parser");
+const { ReadData } = require('./filemgr');
 app.use(bodyParser.urlencoded({extended:true}))
 
 app.set('view engine', 'ejs')
 
-var task = ["go fishing", "ace netcentric"]
+
 var complete = ["Finish project 1"]
 
 // takes us to start of url 
@@ -28,6 +29,7 @@ var complete = ["Finish project 1"]
     // if it is one, then it pushs to complete array and removes from task array
     // does the same in a forloop condition for multiple
     // then redirects back to home display 
+    
     if (typeof completeTask === "string") {
         complete.push(completeTask);
 
@@ -43,8 +45,12 @@ var complete = ["Finish project 1"]
 
 
 // displays all tasks and completed tasks. 
-app.get('/', (req, res) =>{
-    res.render("index",{task: task, complete: complete});
+app.get('/',  async (req, res) =>{
+    console.log("Hello index")
+    let task = await ReadData()
+    
+    console.log(task)
+    res.render("index",{task: task});
  }) 
 
 
