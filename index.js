@@ -22,10 +22,29 @@ var complete = ["Finish project 1"]
 
  })
 
+ app.post('/removetask' ,(req,res) => {
+    var completeTask = req.body.check
+    // any task checked is uploaded into completetask 
+    // if it is one, then it pushs to complete array and removes from task array
+    // does the same in a forloop condition for multiple
+    // then redirects back to home display 
+    if (typeof completeTask === "string") {
+        complete.push(completeTask);
+
+        task.splice(task.indexOf(completeTask),1)
+    } else if (typeof completeTask === "object") {
+        for (var i = 0; i < completeTask.length; i++){
+            complete.push(completeTask[i]);
+            task.splice(task.indexOf(completeTask[i]),1);
+        }
+    }
+    res.redirect("/");
+ })
 
 
+// displays all tasks and completed tasks. 
 app.get('/', (req, res) =>{
-    res.render("index",{task: task, complete:complete});
+    res.render("index",{task: task, complete: complete});
  }) 
 
 
