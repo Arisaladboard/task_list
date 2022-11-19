@@ -1,7 +1,8 @@
 var express = require('express')
 var app = express();
 var bodyParser = require("body-parser");
-const { ReadData } = require('./filemgr');
+const fs = require("fs");
+const { ReadData, WriteData } = require('./filemgr');
 app.use(bodyParser.urlencoded({extended:true}))
 
 app.set('view engine', 'ejs')
@@ -14,11 +15,22 @@ var complete = ["Finish project 1"]
 
 
  // post route to add a task 
- app.post('/addtask', (req,res) => {
-   var newTask = req.body.newtask
-    //adds new task to array stored on server side
-   task.push(newTask);
-    //redirects back to home page 
+ app.post('/addtask', async (req,res) => {
+   var newTask = req.body.newtask //gets new task
+    console.log("newTask")
+
+    const listFile = fs.readFileSync('./listdata.json', 'utf-8')
+    const list = JSON.parse(listFile) 
+    list.push(newTask)
+   
+    fs.writeFile('./listdata.json', JSON.stringify(list), err =>{
+        if (err) {
+            console.log("error")
+        }
+    })
+
+
+    
    res.redirect("/");
 
  })
@@ -47,10 +59,13 @@ var complete = ["Finish project 1"]
 // displays all tasks and completed tasks. 
 app.get('/',  async (req, res) =>{
     console.log("Hello index")
-    let task = await ReadData()
-    
-    console.log(task)
-    res.render("index",{task: task});
+  // ReadData() this works but is this the best way.... 
+
+  const listFile = fs.readFileSync('./listdata.json', 'utf-8')
+  const list = JSON.parse(listFile)
+  
+   
+    res.render("index" ,{list: list});
  }) 
 
 

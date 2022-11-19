@@ -14,11 +14,12 @@
                     <button> Add Task </button>
                     
                     <h2> Ongoing Tasks</h2>
+        
                     <% console.log("hellO ejs") %>
-                    <% console.log(task, task.length)%> 
-                    <% for (var i = 0; i < task.length; i++) { %>
-                        <li><input type="checkbox" name="check" value="<%= task[i]%>" /> <%= task[i] %> </li>
-                     <%}%>
+                        <% console.log(list)%> 
+                        <% for (var i = 0; i < list.length; i++) { %>
+                            <li><input type="checkbox" name="check" value="<%= list[i]%>" /> <%= list[i] %> </li>
+                         <%}%> 
                     <button formaction="/removetask" type="submit"> Remove</button>
             </form>
             <h2> Completed Tasks</h2>
