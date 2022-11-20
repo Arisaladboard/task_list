@@ -2,13 +2,12 @@ var express = require('express')
 var app = express();
 var bodyParser = require("body-parser");
 const fs = require("fs");
-const { ReadData, WriteData } = require('./filemgr');
 app.use(bodyParser.urlencoded({extended:true}))
 
 app.set('view engine', 'ejs')
 
 
-var complete = ["Finish project 1"]
+
 
 // takes us to start of url 
 
@@ -41,17 +40,25 @@ var complete = ["Finish project 1"]
     // if it is one, then it pushs to complete array and removes from task array
     // does the same in a forloop condition for multiple
     // then redirects back to home display 
-    
-    if (typeof completeTask === "string") {
-        complete.push(completeTask);
 
-        task.splice(task.indexOf(completeTask),1)
-    } else if (typeof completeTask === "object") {
-        for (var i = 0; i < completeTask.length; i++){
-            complete.push(completeTask[i]);
-            task.splice(task.indexOf(completeTask[i]),1);
+    const listFile = fs.readFileSync('./listdata.json', 'utf-8')
+    const list = JSON.parse(listFile) 
+
+    if (typeof completeTask === "string"){
+        list.splice(list.indexOf(completeTask),1)
+    } else if (typeof completeTask === "object"){
+        for (var i = 0; i <completeTask.length; i++){
+            list.splice(list.indexOf(completeTask))
         }
     }
+
+    fs.writeFile('./listdata.json', JSON.stringify(list), err =>{
+        if (err) {
+            console.log("error")
+        }
+    })
+    
+    
     res.redirect("/");
  })
 
